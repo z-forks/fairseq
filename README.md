@@ -45,7 +45,7 @@ and
 # Requirements and Installation
 * A computer running macOS or Linux
 * For training new models, you'll also need a NVIDIA GPU and [NCCL](https://github.com/NVIDIA/nccl)
-* A [Torch installation](http://torch.ch/docs/getting-started.html). For maximum speed, we recommend using LuaJIT and [Intel MKL](https://software.intel.com/en-us/intel-mkl).
+* A [Torch installation](http://torch.ch/docs/getting-started.html). For maximum speed, we recommend using LuaJIT and [Intel MKL](https://software.intel.com/en-us/intel-mkl). 安装Torch和LuaJIT还是比较顺利的
 * A recent version [nn](https://github.com/torch/nn). The minimum required version is from May 5th, 2017. A simple `luarocks install nn` is sufficient to update your locally installed version.
 
 Install fairseq by cloning the GitHub repository and running
@@ -55,7 +55,11 @@ luarocks make rocks/fairseq-scm-1.rockspec
 LuaRocks will fetch and build any additional dependencies that may be missing.
 In order to install the CPU-only version (which is only useful for translating new data with an existing model), do
 ```
-luarocks make rocks/fairseq-cpu-scm-1.rockspec
+# 克隆当前库
+$ git clone https://github.com/facebookresearch/fairseq.git
+$ cd fairseq
+# 原文中只有下面这句, 没仔细看的话会以为缺少文件, 在执行这一步之前先确保CUDA、显卡驱动等都已经正确安装
+$ luarocks make rocks/fairseq-scm-1.rockspec
 ```
 
 The LuaRocks installation provides a command-line tool that includes the following functionality:
@@ -72,6 +76,7 @@ The LuaRocks installation provides a command-line tool that includes the followi
 ## Evaluating Pre-trained Models
 First, download a pre-trained model along with its vocabularies:
 ```
+# GPU版, 这个可以预先下载, 比较大接近1G
 $ curl https://s3.amazonaws.com/fairseq/models/wmt14.en-fr.fconv-cuda.tar.bz2 | tar xvjf -
 ```
 
@@ -79,6 +84,7 @@ This will unpack vocabulary files and a serialized model for English to French t
 
 Alternatively, use a CPU-based model:
 ```
+# cpu版
 $ curl https://s3.amazonaws.com/fairseq/models/wmt14.en-fr.fconv-float.tar.bz2 | tar xvjf -
 ```
 
