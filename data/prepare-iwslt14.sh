@@ -10,6 +10,7 @@ TOKENIZER=$SCRIPTS/tokenizer/tokenizer.perl
 LC=$SCRIPTS/tokenizer/lowercase.perl
 CLEAN=$SCRIPTS/training/clean-corpus-n.perl
 
+# 下载原始语料, 一些xml文件, 德语和英语文件
 URL="https://wit3.fbk.eu/archive/2014-01/texts/de/en/de-en.tgz"
 GZ=de-en.tgz
 
@@ -27,6 +28,7 @@ orig=orig
 
 mkdir -p $orig $tmp $prep
 
+# 将原始语料下载到$orig目录下
 echo "Downloading data from ${URL}..."
 cd $orig
 wget "$URL"
@@ -41,6 +43,7 @@ fi
 tar zxvf $GZ
 cd ..
 
+# 分词, 这里的代码是处理上面的xml文件的, 如果不是xml文件可以自己实现分词脚本
 echo "pre-processing train data..."
 for l in $src $tgt; do
     f=train.tags.$lang.$l
@@ -57,8 +60,10 @@ for l in $src $tgt; do
     perl $TOKENIZER -threads 8 -l $l > $tmp/$tok
     echo ""
 done
+# 清楚过长的句子
 perl $CLEAN -ratio 1.5 $tmp/train.tags.$lang.tok $src $tgt $tmp/train.tags.$lang.clean 1 175
 for l in $src $tgt; do
+    # 大小写转换
     perl $LC < $tmp/train.tags.$lang.clean.$l > $tmp/train.tags.$lang.$l
 done
 
