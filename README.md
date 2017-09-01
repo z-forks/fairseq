@@ -133,19 +133,19 @@ This will write binarized data that can be used for model training to data-bin/i
 Use `fairseq train` to train a new model.
 Here a few example settings that work well for the IWSLT14 dataset:
 ```
-# Standard bi-directional LSTM model 标准双向LSTM模型
+# Standard bi-directional LSTM model 标准双向LSTM模型 (我训练时,耗时一个半小时)
 $ cd ~/fairseq
 $ mkdir -p trainings/blstm
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model blstm -nhid 512 -dropout 0.2 -dropout_hid 0 -optim adam -lr 0.0003125 -savedir trainings/blstm
 
-# Fully convolutional sequence-to-sequence model 完全卷积sequence-to-sequence模型
+# Fully convolutional sequence-to-sequence model 完全卷积sequence-to-sequence模型  (耗时一小时)
 $ mkdir -p trainings/fconv
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model fconv -nenclayer 4 -nlayer 3 -dropout 0.2 -optim nag -lr 0.25 -clip 0.1 \
   -momentum 0.99 -timeavg -bptt 0 -savedir trainings/fconv
 
-# Convolutional encoder, LSTM decoder 卷积编码器，LSTM解码器
+# Convolutional encoder, LSTM decoder 卷积编码器，LSTM解码器 (耗时一小时)
 $ mkdir -p trainings/convenc
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model conv -nenclayer 6 -dropout 0.2 -dropout_hid 0 -savedir trainings/convenc
