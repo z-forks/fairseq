@@ -139,7 +139,7 @@ $ mkdir -p trainings/blstm
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model blstm -nhid 512 -dropout 0.2 -dropout_hid 0 -optim adam -lr 0.0003125 -savedir trainings/blstm
 
-# Fully convolutional sequence-to-sequence model 完全卷积sequence-to-sequence模型  (耗时一小时)
+# Fully convolutional sequence-to-sequence model 完全卷积sequence-to-sequence模型  (耗时50分钟)
 $ mkdir -p trainings/fconv
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model fconv -nenclayer 4 -nlayer 3 -dropout 0.2 -optim nag -lr 0.25 -clip 0.1 \
