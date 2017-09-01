@@ -118,7 +118,9 @@ the IWSLT14 German-English corpus.
 Pre-process and binarize the data as follows:
 ```
 $ cd data/
+# data目录下只有prepare-iwslt14.sh一个文件
 $ bash prepare-iwslt14.sh
+# prepare-iwslt14.sh脚本会下载安装mosesdecoder, 和de->en的语料(一些xml文件等), 执行完毕后会生成分词后的iwslt14.tokenized.de-en文件
 $ cd ..
 $ TEXT=data/iwslt14.tokenized.de-en
 $ fairseq preprocess -sourcelang de -targetlang en \
@@ -127,22 +129,23 @@ $ fairseq preprocess -sourcelang de -targetlang en \
 ```
 This will write binarized data that can be used for model training to data-bin/iwslt14.tokenized.de-en.
 
-### Training
+### Training 训练模型 - 这是比较耗时的操作
 Use `fairseq train` to train a new model.
 Here a few example settings that work well for the IWSLT14 dataset:
 ```
-# Standard bi-directional LSTM model
+# Standard bi-directional LSTM model 标准双向LSTM模型
+$ cd ~/fairseq
 $ mkdir -p trainings/blstm
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model blstm -nhid 512 -dropout 0.2 -dropout_hid 0 -optim adam -lr 0.0003125 -savedir trainings/blstm
 
-# Fully convolutional sequence-to-sequence model
+# Fully convolutional sequence-to-sequence model 完全卷积sequence-to-sequence模型
 $ mkdir -p trainings/fconv
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model fconv -nenclayer 4 -nlayer 3 -dropout 0.2 -optim nag -lr 0.25 -clip 0.1 \
   -momentum 0.99 -timeavg -bptt 0 -savedir trainings/fconv
 
-# Convolutional encoder, LSTM decoder
+# Convolutional encoder, LSTM decoder 卷积编码器，LSTM解码器
 $ mkdir -p trainings/convenc
 $ fairseq train -sourcelang de -targetlang en -datadir data-bin/iwslt14.tokenized.de-en \
   -model conv -nenclayer 6 -dropout 0.2 -dropout_hid 0 -savedir trainings/convenc
@@ -237,6 +240,30 @@ BLEU4 = 40.55, 67.6/46.5/34.0/25.3 (BP=1.000, ratio=0.998, sys_len=81369, ref_le
 * Facebook page: https://www.facebook.com/groups/fairseq.users
 * Google group: https://groups.google.com/forum/#!forum/fairseq-users
 * Contact: [jgehring@fb.com](mailto:jgehring@fb.com), [michaelauli@fb.com](mailto:michaelauli@fb.com)
+
+# 训练时GPU使用状况
+```
+$ nvidia-smi
+```
+
+Fri Sep  1 15:22:39 2017
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 375.66                 Driver Version: 375.66                    |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 1080    Off  | 0000:01:00.0     Off |                  N/A |
+| 36%   58C    P2    99W / 198W |   2295MiB /  8112MiB |     71%      Default |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID  Type  Process name                               Usage      |
+|=============================================================================|
+|    0     19591    C   /home/torch/torch/install/bin/luajit          2293MiB |
++-----------------------------------------------------------------------------+
+
 
 # License
 fairseq is BSD-licensed.
