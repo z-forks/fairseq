@@ -129,6 +129,10 @@ $ fairseq preprocess -sourcelang de -targetlang en \
 ```
 This will write binarized data that can be used for model training to data-bin/iwslt14.tokenized.de-en.
 
+`fairseq preprocess `执行完后会生成二进制到`data-bin/iwslt14.tokenized.de-en` 文件夹中, 用于模型训练
+
+所以, 我们只需要准源语料就行了
+
 ### Training 训练模型 - 这是比较耗时的操作
 Use `fairseq train` to train a new model.
 Here a few example settings that work well for the IWSLT14 dataset:
