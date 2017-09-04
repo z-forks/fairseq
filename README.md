@@ -162,7 +162,7 @@ Use the [CUDA_VISIBLE_DEVICES](http://acceleware.com/blog/cudavisibledevices-mas
 Once your model is trained, you can translate with it using `fairseq generate` (for binarized data) or `fairseq generate-lines` (for text).
 Here, we'll do it for a fully convolutional model:
 ```
-# Optional: optimize for generation speed
+# Optional: optimize for generation speed 不执行优化的话, 下面翻译会很慢
 $ fairseq optimize-fconv -input_model trainings/fconv/model_best.th7 -output_model trainings/fconv/model_best_opt.th7
 
 # Translate some text
