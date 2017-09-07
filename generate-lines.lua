@@ -75,11 +75,11 @@ end
 
 local TextFileIterator, _ =
     torch.class('tnt.TextFileIterator', 'tnt.DatasetIterator', tnt)
-
+-- 定义一个类
 TextFileIterator.__init = argcheck{
     {name='self', type='tnt.TextFileIterator'},
-    {name='path', type='string'},
-    {name='transform', type='function',
+    {name='path', type='string'}, -- path 属性
+    {name='transform', type='function', -- transform function
         default=function(sample) return sample end},
     call = function(self, path, transform)
         function self.run()
@@ -96,7 +96,7 @@ TextFileIterator.__init = argcheck{
                 end
                 local line = fd:read()
                 if line ~= nil then
-                    return transform(line)
+                    return transform(line) -- line 就是 input text
                 elseif fd ~= io.stdin then
                     fd:close()
                 end
@@ -105,17 +105,18 @@ TextFileIterator.__init = argcheck{
     end
 }
 
+
 local dataset = tnt.DatasetIterator{
-    iterator = tnt.TextFileIterator{
+    iterator = tnt.TextFileIterator{ -- 这里是创建一个TextFileIterator 对象
         path = config.input,
-        transform = function(line)
+        transform = function(line) -- 给对象属性赋值
             return {
-                bin = tokenizer.tensorizeString(line, config.srcdict),
-                text = line,
+                bin = tokenizer.tensorizeString(line, config.srcdict), -- 注意这里: 下面会用到 bin
+                text = line, -- 注意这里, 这里传过来的line是string
             }
         end
     },
-    transform = function(sample)
+    transform = function(sample) -- 这是sample 是 table 类型, 经过上面的处理, sample已经包含 line和bin属性了
         local source = sample.bin:view(-1, 1):int()
         local sourcePos = data.makePositions(source,
             config.srcdict:getPadIndex()):view(-1, 1)
