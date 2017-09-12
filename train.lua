@@ -192,12 +192,34 @@ local thread_init_fn = function(id)
 end
 
 local make_model_fn = function(id)
-    local model = require(
-        string.format('fairseq.models.%s_model',
-            config.model)
-    ).new(config)
-    model:cuda()
-    return model
+    
+    -- local model = require(
+    --    string.format('fairseq.models.%s_model',
+    --        config.model)
+    -- ).new(config)
+    -- model:cuda()
+    -- return model
+        
+	-- print('---->'..config.savedir)
+	local plpath = require 'pl.path'
+	-- print(plpath.join(config.savedir, 'model_best_opt.th7'))
+
+    local path = plpath.join(config.savedir, 'model_best_opt.th7')
+    -- 判断文件是否存在
+    
+    if plpath.exists(path) then
+        require(string.format('fairseq.models.%s_model', config.model))
+        print('-------load model----'..path)
+        local model = torch.load(path)
+        model:cuda()
+        return model
+    else
+        local model = require(
+        string.format('fairseq.models.%s_model', config.model)).new(config)
+        model:cuda()
+        return model
+    end
+    
 end
 
 local make_criterion_fn = function(id)
