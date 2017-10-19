@@ -28,10 +28,13 @@
 --   ./data/iwslt14.tokenized.de-en/train.de
 --   ./data/iwslt14.tokenized.de-en/train.en
 --
+-- 如果提供了已经对齐的文件（-alignfile），此脚本还会从源语言中为每个单词生成目标语言中最常用单词的列表。
+-- 会在fairseq/text/tokenizer.lua buildAlignFreqMap() 方法中使用到
 -- If a file with alignments is given (-alignfile) this script also produces a
 -- list (of length -ncandidates) of most common words from the target language
 -- for each word from the source language.
 --
+-- 对齐文件 使用"Pharaoh format"格式
 -- The alignemnt file uses "Pharaoh format", where a pair i-j (zero based)
 -- indicates that the ith word of the source language is aligned to the jth
 -- word of the target language. For example:
